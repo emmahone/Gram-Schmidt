@@ -43,3 +43,45 @@ u2 = w2 / ||w2||
 The process is repeated for the remaining vectors, producing a set of n orthogonal vectors {u1, u2, ..., un} that span the same subspace as the original set of vectors.
 
 The Gram-Schmidt process can be used to find an orthonormal basis for a subspace, which is useful in many applications such as linear regression, signal processing, and quantum mechanics.
+
+# Example
+
+In this script, the gram_schmidt function takes a numpy array of linearly independent vectors as input and returns an orthonormal basis for the subspace spanned by these vectors using the Gram-Schmidt orthogonalization process. The function first initializes the first vector by normalizing it to produce a unit vector. Then, for each remaining vector, the function computes the projection onto the subspace spanned by the previous vectors and subtracts this projection from the current vector to produce an orthogonal vector. Finally, the function normalizes each vector again to ensure orthonormality.
+
+In the example usage, we create a numpy array of three linearly independent vectors and pass it to the gram_schmidt function to compute an orthonormal basis for the subspace spanned by these vectors. The output is a numpy array of three orthonormal vectors that span the same subspace as the original set.
+
+```
+import numpy as np
+
+def gram_schmidt(vectors):
+    """
+    Gram-Schmidt orthogonalization process for a set of vectors.
+
+    Parameters:
+        vectors (numpy.ndarray): An array of linearly independent vectors.
+
+    Returns:
+        numpy.ndarray: An orthonormal set of vectors that span the same subspace as the original set.
+    """
+
+    n = vectors.shape[0]
+    basis = np.zeros((n, n))
+
+    for i in range(n):
+        # Normalize the i-th vector
+        basis[i] = vectors[i] / np.linalg.norm(vectors[i])
+
+        # Project the remaining vectors onto the subspace spanned by the first i vectors
+        for j in range(i+1, n):
+            basis[j] -= np.dot(vectors[j], basis[i]) * basis[i]
+
+        # Normalize the i-th vector again to ensure orthonormality
+        basis[i] /= np.linalg.norm(basis[i])
+
+    return basis
+
+# Example usage
+vectors = np.array([[1, 0, 1], [1, 1, 0], [0, 1, 1]])
+orthonormal_basis = gram_schmidt(vectors)
+print(orthonormal_basis)
+```
